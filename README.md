@@ -2,7 +2,7 @@
 [![Tests](https://github.com/MIYUMIYUMIMI/mandarake-watcher/actions/workflows/tests.yaml/badge.svg)](https://github.com/MIYUMIYUMIMI/mandarake-watcher/actions/workflows/tests.yaml)
 ## Demo
 
-![Mandarake Watcher running](docs/watcher-demo.png)
+![Mandarake Watcher running](docs/watcherdemo.png)
 
 A configurable Python application for monitoring new listings on Mandarake and sending email alerts when unseen items appear.
 
