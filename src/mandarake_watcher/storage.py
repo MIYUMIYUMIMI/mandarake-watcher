@@ -25,12 +25,28 @@ def initialize_database() -> None:
                 price TEXT,
                 shop TEXT,
                 url TEXT NOT NULL,
+                image_url TEXT,
                 first_seen TEXT NOT NULL,
                 last_seen TEXT NOT NULL,
                 PRIMARY KEY (keyword, item_code)
             )
             """
         )
+
+        columns = {
+            row[1]
+            for row in connection.execute(
+                "PRAGMA table_info(seen_items)"
+            )
+        }
+
+        if "image_url" not in columns:
+            connection.execute(
+                """
+                ALTER TABLE seen_items
+                ADD COLUMN image_url TEXT
+                """
+            )
 
 
 def keyword_has_history(keyword: str) -> bool:
@@ -52,10 +68,11 @@ def save_items(
     keyword: str,
     items: list[Item],
 ) -> list[Item]:
-
     initialize_database()
 
-    first_run = not keyword_has_history(keyword)
+    first_run = not keyword_has_history(
+        keyword
+    )
 
     new_items: list[Item] = []
 
@@ -74,10 +91,11 @@ def save_items(
                     price,
                     shop,
                     url,
+                    image_url,
                     first_seen,
                     last_seen
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     keyword,
@@ -86,6 +104,7 @@ def save_items(
                     item.price,
                     item.shop,
                     item.url,
+                    item.image_url,
                     now,
                     now,
                 ),
@@ -102,6 +121,7 @@ def save_items(
                     price = ?,
                     shop = ?,
                     url = ?,
+                    image_url = ?,
                     last_seen = ?
                 WHERE
                     keyword = ?
@@ -112,6 +132,7 @@ def save_items(
                     item.price,
                     item.shop,
                     item.url,
+                    item.image_url,
                     now,
                     keyword,
                     item.item_code,
@@ -123,6 +144,7 @@ def save_items(
             f"Initial baseline created for "
             f"'{keyword}' with {len(items)} items."
         )
+
         return []
 
     return new_items

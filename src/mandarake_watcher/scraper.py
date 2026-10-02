@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
 
 SEARCH_URL = "https://order.mandarake.co.jp/order/listPage/list"
-BASE_URL = "https://order.mandarake.co.jp"
 
 
 @dataclass
@@ -18,16 +17,15 @@ class Item:
     price: str
     shop: str
     url: str
+    image_url: str
 
 
 def build_search_url(keyword: str) -> str:
     params = {
         "keyword": keyword,
-        
     }
 
     return f"{SEARCH_URL}?{urlencode(params)}"
-
 
 
 def fetch_search_page(keyword: str) -> str:
@@ -73,7 +71,10 @@ def fetch_search_page(keyword: str) -> str:
                 timeout=15_000,
             )
         except Exception:
-            print("Product cards were not detected within 15 seconds.")
+            print(
+                "Product cards were not detected "
+                "within 15 seconds."
+            )
 
         print("Final URL:", page.url)
         print("Title:", page.title())
@@ -82,15 +83,22 @@ def fetch_search_page(keyword: str) -> str:
             "div.block[data-itemidx]"
         ).count()
 
-        print("Product cards:", card_count)
+        print(
+            "Product cards:",
+            card_count,
+        )
 
         html = page.content()
 
-        print("HTML length:", len(html))
+        print(
+            "HTML length:",
+            len(html),
+        )
 
         context.close()
 
         return html
+
 
 def parse_items(html: str) -> list[Item]:
     soup = BeautifulSoup(
@@ -122,28 +130,31 @@ def parse_items(html: str) -> list[Item]:
             "div.price p"
         )
 
+        image_element = card.select_one(
+            "div.pic img"
+        )
+
         if not item_code or title_link is None:
             continue
 
-        title = title_link.get_text(
-            " ",
-            strip=True,
+        title = " ".join(
+            title_link.get_text(
+                " ",
+                strip=True,
+            ).split()
         )
 
         shop = (
-            shop_element.get_text(
-                " ",
-                strip=True,
+            " ".join(
+                shop_element.get_text(
+                    " ",
+                    strip=True,
+                ).split()
             )
             if shop_element
             else ""
         )
 
-        price = (    
-            " ".join(price_element.stripped_strings)    
-                if price_element    
-                else ""
-            )
         price = (
             " ".join(
                 price_element.get_text(
@@ -156,9 +167,18 @@ def parse_items(html: str) -> list[Item]:
         )
 
         url = (
-            f"https://order.mandarake.co.jp/"
-            f"order/detailPage/item?"
+            "https://order.mandarake.co.jp/"
+            "order/detailPage/item?"
             f"itemCode={item_code}"
+        )
+
+        image_url = (
+            image_element.get(
+                "src",
+                "",
+            )
+            if image_element
+            else ""
         )
 
         items.append(
@@ -168,11 +188,11 @@ def parse_items(html: str) -> list[Item]:
                 price=price,
                 shop=shop,
                 url=url,
+                image_url=image_url,
             )
         )
 
     return items
-
 
 
 def search_mandarake(
@@ -188,7 +208,9 @@ if __name__ == "__main__":
         "Keyword to monitor: "
     ).strip()
 
-    items = search_mandarake(keyword)
+    items = search_mandarake(
+        keyword
+    )
 
     print(
         f"\nFound {len(items)} items "
@@ -207,6 +229,10 @@ if __name__ == "__main__":
 
         print(
             f"Price: {item.price}"
+        )
+
+        print(
+            f"Image: {item.image_url}"
         )
 
         print(

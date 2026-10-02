@@ -18,6 +18,7 @@ def make_item(
             "order/detailPage/item?"
             f"itemCode={item_code}"
         ),
+        image_url="https://example.com/image.jpg",
     )
 
 
@@ -79,10 +80,7 @@ def test_second_run_detects_new_item(
     )
 
     assert len(new_items) == 1
-    assert (
-        new_items[0].item_code
-        == "TEST002"
-    )
+    assert new_items[0].item_code == "TEST002"
 
 
 def test_existing_item_is_not_reported_twice(

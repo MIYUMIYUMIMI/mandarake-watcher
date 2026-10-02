@@ -15,6 +15,10 @@ SAMPLE_HTML = """
                 </p>
             </div>
 
+            <div class="pic">
+                <img src="https://img.example.com/test.jpg">
+            </div>
+
             <div class="title">
                 <p>
                     <a href="/order/detailPage/item?itemCode=1349446110">
@@ -50,6 +54,8 @@ def test_parse_items_extracts_fields() -> None:
     assert item.title == "ポケットモンスター フシギダネ"
     assert item.shop == "中野店"
     assert item.price == "1,500円 (税込 1,650円)"
+    assert item.image_url == "https://img.example.com/test.jpg"
+
     assert (
         item.url
         == "https://order.mandarake.co.jp/"
