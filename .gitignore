@@ -1,0 +1,33 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Packaging
+*.egg-info/
+
+# Test cache
+.pytest_cache/
+
+# Secrets
+.env
+
+# Local databases
+mandarake_watcher.db
+manual_test.db
+*.db
+
+# Debug files
+mandarake_debug.html
+
+# Browser profile
+.mandarake_profile/
+
+# IDE / OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+config.yaml
