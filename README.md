@@ -2,7 +2,25 @@
 [![Tests](https://github.com/MIYUMIYUMIMI/mandarake-watcher/actions/workflows/tests.yaml/badge.svg)](https://github.com/MIYUMIYUMIMI/mandarake-watcher/actions/workflows/tests.yaml)
 ## Demo
 
-![Mandarake Watcher running](docs/watcherdemo.png)
+### Listing Monitor
+
+The watcher periodically checks configured Mandarake keywords and stores the current listings as a local baseline.
+
+<img
+  src="docs/watcherdemo.png"
+  alt="Mandarake Watcher running"
+  width="850"
+/>
+
+### Email Notification
+
+When a previously unseen item is detected, the watcher sends an HTML email containing the product image, title, price, shop, and a direct link to the listing.
+
+<img
+  src="docs/email-notification.jpg"
+  alt="Mandarake Watcher email notification"
+  width="420"
+/>
 
 A configurable Python application for monitoring new listings on Mandarake and sending email alerts when unseen items appear.
 
