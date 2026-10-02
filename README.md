@@ -1,5 +1,5 @@
 # Mandarake Watcher
-
+[![Tests](https://github.com/MIYUMIYUMIMI/mandarake-watcher/actions/workflows/tests.yaml/badge.svg)](https://github.com/MIYUMIYUMIMI/mandarake-watcher/actions/workflows/tests.yaml)
 A configurable Python application for monitoring new listings on Mandarake and sending email alerts when unseen items appear.
 
 The watcher uses Playwright to load Mandarake search pages, parses product information, stores previously seen items in SQLite, and sends Gmail notifications only when new item codes are detected.
